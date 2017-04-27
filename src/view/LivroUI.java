@@ -51,34 +51,33 @@ public class LivroUI {
     private void emprestar() {
         String matricula = Console.scanString("Matrícula do cliente: ");
         Cliente cliente = listaClientes.buscarCliente(matricula);
-        if( cliente != null ) {
+        if( cliente != null && cliente.getLivrosRetirados() < 3 ) {
             try{
                 String dataEntrega = Console.scanString("Data da entrega: ");
                 Emprestimo emprestimo = new Emprestimo(cliente, DateUtil.stringToDate(dataEntrega));
-                int maxLivro = 0;
+                int outroLivro = 0;
                 do{
                     String isbn = Console.scanString("ISBN do livro: ");
                     Livro livro = lista.buscarLivro(isbn);
                     if ( livro != null && livro.getDisponivel() ) {
-                        maxLivro++;
                         emprestimo.adicionarLivro(livro);
                         livro.setDisponivel(false);
-                        if(maxLivro < 3) {
-                            int outroLivro = Console.scanInt("Deseja retirar outro livro?: ");
-                            if(outroLivro != 1)
-                                maxLivro = 3;
+                        if(cliente.getLivrosRetirados() < 3) {
+                            outroLivro = Console.scanInt("Deseja retirar outro livro?: ");
                         }
                     }else{
                         System.out.println("Livro indisponível ou não existe.");
                     } 
-                }while(maxLivro < 3);
+                }while(cliente.getLivrosRetirados() < 3 && outroLivro == 1);
                 this.listaEmprestimo.addEmprestimo(emprestimo);
                 System.out.println("Empréstimo realizado com sucesso. ID: "+emprestimo.getId());
             }catch (DateTimeParseException ex) {
                 System.out.println("Data ou hora no formato inválido!");                
+            }catch(Exception e) {
+                System.out.println("ERRO: "+e.getMessage());                
             }
         }else{
-            System.out.println("Cliente não existe.");
+            System.out.println("Cliente não disponível para retirada de livros.");
         }      
     }
     
