@@ -5,11 +5,13 @@ import java.util.Objects;
 public class Cliente {
     
     private String matricula, nome, telefone;
+    private int livrosRetirados;
     
     public Cliente(String matricula, String nome, String telefone) {
         this.matricula = matricula;
         this.nome = nome;
         this.telefone = telefone;
+        this.livrosRetirados = 0;
     }
 
     public String getMatricula() {
@@ -22,6 +24,14 @@ public class Cliente {
 
     public String getTelefone() {
         return telefone;
+    }
+    
+    public int getLivrosRetirados() {
+        return livrosRetirados;
+    }
+    
+    public void setLivrosRetirados(int livrosRetirados) {
+        this.livrosRetirados = livrosRetirados;
     }
         
     @Override
