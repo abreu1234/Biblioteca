@@ -55,11 +55,13 @@ public class ClienteUI {
             System.out.println(String.format("%-10s", "MATRÍCULA") + "\t"
                     + String.format("%-20s", "|NOME") + "\t"
                     + String.format("%-20s", "|TELEFONE") + "\t"
+                    + String.format("%-10s", "|LIVROS RETIRADOS") + "\t"
             );
             for (Cliente cliente : lista.getListaClientes()) {
                 System.out.println(String.format("%-10s", cliente.getMatricula()) + "\t"
                         + String.format("%-20s", "|" + cliente.getNome()) + "\t"
                         + String.format("%-20s", "|" + cliente.getTelefone()) + "\t"
+                        + String.format("%-10s", "|" + cliente.getTotalLivrosRetirados()) + "\t"
                 );
             }
         }
