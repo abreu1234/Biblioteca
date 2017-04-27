@@ -38,9 +38,6 @@ public class MainUI {
                 case MainMenu.OP_CLIENTES:
                     new ClienteUI(listaClientes).executar();
                     break;
-                case MainMenu.OP_RELATORIOS:
-                    new RelatorioUI(listaLivros, listaClientes, listaEmprestimos).executar();
-                    break;
                 case MainMenu.OP_SAIR:
                     System.out.println("Aplicação finalizada!!!");
                     break;

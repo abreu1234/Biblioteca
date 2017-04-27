@@ -7,6 +7,7 @@ public class Livro {
     
     private String isbn, nome, autores, editora;
     private LocalDate dataPublicacao;
+    private int qtdRetirado;
     private boolean disponivel;
     
     public Livro(String isbn, String nome, String autores, String editora, LocalDate dataPublicacao) {
@@ -16,6 +17,7 @@ public class Livro {
         this.editora = editora;
         this.dataPublicacao = dataPublicacao;
         this.disponivel = true;
+        this.qtdRetirado = 0;
     }
 
     public String getIsbn() {
@@ -40,6 +42,14 @@ public class Livro {
     
     public boolean getDisponivel() {
         return disponivel;
+    }
+    
+    public int getLivroRetirado() {
+        return qtdRetirado;
+    }
+    
+    public void livroRetirado() {
+        this.qtdRetirado++;
     }
     
     public void setDisponivel(boolean disponivel) {

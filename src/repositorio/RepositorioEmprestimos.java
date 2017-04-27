@@ -20,7 +20,7 @@ public class RepositorioEmprestimos {
     public List<Emprestimo> getListaLivros() {
         return this.emprestimos;
     }
-           
+          
     public Emprestimo buscar(Cliente cliente) {
         for (Emprestimo emprestimo : emprestimos) {
             if (!emprestimo.getEntregue() && emprestimo.getCliente().equals(cliente)) {

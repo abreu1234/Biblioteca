@@ -1,6 +1,7 @@
 package view;
 
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import model.Cliente;
 import model.Emprestimo;
 import model.Livro;
@@ -40,6 +41,12 @@ public class LivroUI {
                     break;
                 case LivroMenu.OP_DEVOLUCAO:
                     devolver();
+                    break;
+                case LivroMenu.OP_DISPONIVEIS:
+                    livrosDisponiveis();
+                    break;
+                case LivroMenu.OP_MAIS_RETIRADOS:
+                    livrosDisponiveis();
                     break;
                 default:
                     System.out.println("Opção inválida..");
@@ -113,19 +120,26 @@ public class LivroUI {
     }
     
     public void listar() {
-        if(lista.getListaLivros().size() <= 0){
+        imprimir(lista.getListaLivros());
+    }    
+    
+    public void livrosDisponiveis() {
+        imprimir(lista.getListaLivrosDisponiveis());
+    }
+    
+    private void imprimir(List<Livro> livros) {
+        if(livros.size() <= 0){
             System.out.println("-----------------------------");        
-            System.out.println("Nao ha livros cadastrados");
+            System.out.println("Nao ha livros nesta lista");
             System.out.println("-----------------------------\n");
-        }
-        else{
+        }else{
             System.out.println("-----------------------------\n");
             System.out.println(String.format("%-10s", "ISBN") + "\t"
                     + String.format("%-20s", "|NOME") + "\t"
                     + String.format("%-20s", "|AUTORES") + "\t"
                     + String.format("%-20s", "|EDITORA") + "\t"
                     + String.format("%-20s", "|DATA DE PUBLICAÇÃO"));
-            for (Livro livro : lista.getListaLivros()) {
+            for (Livro livro : livros) {
                 System.out.println(String.format("%-10s", livro.getIsbn()) + "\t"
                         + String.format("%-20s", "|" + livro.getNome()) + "\t"
                         + String.format("%-20s", "|" + livro.getAutores()) + "\t"
@@ -134,7 +148,6 @@ public class LivroUI {
                 );
             }
         }
-
     }
-    
+        
 }
