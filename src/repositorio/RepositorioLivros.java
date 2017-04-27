@@ -52,6 +52,22 @@ public class RepositorioLivros {
     }
     
     /**
+     * Retorna lista de livros retirados
+     * 
+     * @return List<Livro>
+     */
+    public List<Livro> getListaLivrosRetirados() {
+        List<Livro> disponiveis = new ArrayList<Livro>();
+        for(Livro livro : livros) {
+            if(livro.getLivroRetirado() > 0) {
+                disponiveis.add(livro);
+            }
+        }
+        
+        return disponiveis;
+    }
+    
+    /**
      * Verifica se livro já existe na lista
      * 
      * @param isbn

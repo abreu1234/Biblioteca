@@ -127,6 +127,10 @@ public class LivroUI {
         imprimir(lista.getListaLivrosDisponiveis());
     }
     
+    public void livrosMaisRetirados() {
+        imprimir(lista.getListaLivrosRetirados());
+    }
+    
     private void imprimir(List<Livro> livros) {
         if(livros.size() <= 0){
             System.out.println("-----------------------------");        
@@ -138,13 +142,16 @@ public class LivroUI {
                     + String.format("%-20s", "|NOME") + "\t"
                     + String.format("%-20s", "|AUTORES") + "\t"
                     + String.format("%-20s", "|EDITORA") + "\t"
-                    + String.format("%-20s", "|DATA DE PUBLICAÇÃO"));
+                    + String.format("%-20s", "|DATA DE PUBLICAÇÃO")
+                    + String.format("%-10s", "|VEZES EMPRESTADO"));
             for (Livro livro : livros) {
                 System.out.println(String.format("%-10s", livro.getIsbn()) + "\t"
                         + String.format("%-20s", "|" + livro.getNome()) + "\t"
                         + String.format("%-20s", "|" + livro.getAutores()) + "\t"
                         + String.format("%-20s", "|" + livro.getEditora()) + "\t"
+                        + String.format("%-20s", "|" + livro.getEditora()) + "\t"
                         + String.format("%-20s", "|" + DateUtil.dateToString(livro.getDataPublicacao()))
+                        + String.format("%-10s", "|" + livro.getLivroRetirado())
                 );
             }
         }
