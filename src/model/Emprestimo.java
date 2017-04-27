@@ -58,8 +58,7 @@ public class Emprestimo {
     }
     
     public void adicionarLivro(Livro l) {
-        int livrosRetirados = this.cliente.getLivrosRetirados() + 1;
-        this.cliente.setLivrosRetirados( livrosRetirados );
+        this.cliente.livroRetirado();
         livros.add(l);
     }
     
