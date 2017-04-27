@@ -1,9 +1,12 @@
 package view;
 
+import model.Cliente;
+import model.Livro;
 import repositorio.RepositorioClientes;
 import repositorio.RepositorioEmprestimos;
 import repositorio.RepositorioLivros;
 import util.Console;
+import util.DateUtil;
 import view.menu.MainMenu;
 
 /**
@@ -20,6 +23,7 @@ public class MainUI {
         listaLivros = new RepositorioLivros();
         listaClientes = new RepositorioClientes();
         listaEmprestimos = new RepositorioEmprestimos();
+        this.init();
     }
     
     public void executar() {
@@ -42,6 +46,13 @@ public class MainUI {
 
             }
         } while (opcao != MainMenu.OP_SAIR);
+    }
+    
+    private void init() {
+        for(int i = 0; i<=10;i++) {
+            this.listaLivros.addLivro(new Livro( "#"+i, "Nome "+i, "Autores "+i, "Editora "+i, DateUtil.stringToDate("13/12/1990") ));
+            this.listaClientes.addCliente(new Cliente("#"+i, "Nome "+i, "Autores"+i ));
+        }
     }
     
 }
