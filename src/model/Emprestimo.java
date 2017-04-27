@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ public class Emprestimo {
     
     private static int AUTO_INCREMENT = 1;
     private int id;
+    private long diasAtraso;
     private Cliente cliente;
     private LocalDate dataEntrega;
     private List<Livro> livros;
@@ -19,6 +21,7 @@ public class Emprestimo {
         this.dataEntrega = dataEntrega;
         this.livros = new ArrayList<>();
         this.entregue = false;
+        this.diasAtraso = 0;
     }
 
     public static int getAUTO_INCREMENT() {
@@ -45,9 +48,19 @@ public class Emprestimo {
         return entregue;
     }
     
+    public long getDiasAtraso() {
+        return diasAtraso;
+    }
+    
     public void entregar() {
         for (Livro livro : livros) {
             livro.setDisponivel(true);
+        }
+        LocalDate dataHoje = LocalDate.now();
+        if(dataEntrega.isAfter(dataHoje)) {
+            long diasDiferenca = dataHoje.until(dataEntrega, ChronoUnit.DAYS);
+            this.diasAtraso = diasDiferenca;
+            this.cliente.setDiasAtraso(diasAtraso);
         }
         this.cliente.setLivrosRetirados(0);
         this.entregue = true;

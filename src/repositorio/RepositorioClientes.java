@@ -49,4 +49,15 @@ public class RepositorioClientes {
         return clientes;
     }
     
+    public List<Cliente> getListaClientesAtrasados() {
+        List<Cliente> clientes = new ArrayList<Cliente>();
+        for (Cliente cliente: this.clientes) {
+            if(cliente.getDiasAstraso()> 0) {
+                clientes.add(cliente);
+            }
+        }
+        
+        return clientes;
+    }
+    
 }

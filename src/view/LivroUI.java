@@ -94,7 +94,7 @@ public class LivroUI {
         Emprestimo emprestimo = this.listaEmprestimo.buscar(cliente);
         if( emprestimo != null ) {
             emprestimo.entregar();
-            System.out.println("Livros entregues com sucesso.");
+            System.out.println("Livros entregues com sucesso. Dias de atraso: "+emprestimo.getDiasAtraso());
         }else{
             System.out.println("Cliente não possui empréstimos pendentes.");
         }   

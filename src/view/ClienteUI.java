@@ -27,7 +27,10 @@ public class ClienteUI {
                     listar();
                     break;
                 case ClienteMenu.OP_MAIS_RETIRARAM:
-                    listar();
+                    listarClientesRetiraram();
+                    break;
+                case ClienteMenu.OP_ATRASADOS:
+                    listarClientesRetiraram();
                     break;
                 default:
                     System.out.println("Opção inválida..");
@@ -71,6 +74,14 @@ public class ClienteUI {
     }
     
     public void listar() {
+        imprimir(lista.getListaClientes());
+    }
+    
+    public void listarClientesRetiraram() {
+        imprimir(lista.getListaClientesRetiraram());
+    }
+    
+    public void listarClientesAtrasados() {
         imprimir(lista.getListaClientesRetiraram());
     }
     

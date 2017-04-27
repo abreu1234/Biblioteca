@@ -5,6 +5,7 @@ import java.util.Objects;
 public class Cliente {
     
     private String matricula, nome, telefone;
+    private long diasAtraso;
     private int livrosRetirados, totalLivrosRetirados;
     
     public Cliente(String matricula, String nome, String telefone) {
@@ -13,6 +14,7 @@ public class Cliente {
         this.telefone = telefone;
         this.livrosRetirados = 0;
         this.totalLivrosRetirados = 0;
+        this.diasAtraso = 0;
     }
 
     public String getMatricula() {
@@ -33,6 +35,14 @@ public class Cliente {
     
     public int getTotalLivrosRetirados() {
         return totalLivrosRetirados;
+    }
+    
+    public long getDiasAstraso() {
+        return diasAtraso;
+    }
+    
+    public void setDiasAtraso(long diasAtraso) {
+        this.diasAtraso = diasAtraso;
     }
     
     public void setLivrosRetirados(int livrosRetirados) {
