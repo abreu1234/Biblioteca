@@ -13,7 +13,7 @@ public class RepositorioEmprestimos {
         this.emprestimos = new ArrayList<Emprestimo>();
     }
     
-    public boolean addLivro(Emprestimo emprestimos) {
+    public boolean addEmprestimo(Emprestimo emprestimos) {
         return (this.emprestimos.add(emprestimos));
     }
     

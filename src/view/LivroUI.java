@@ -72,7 +72,8 @@ public class LivroUI {
                         System.out.println("Livro indisponível ou não existe.");
                     } 
                 }while(maxLivro < 3);
-                System.out.println("Empréstimo realizado com sucesso. ID: "+emprestimo);
+                this.listaEmprestimo.addEmprestimo(emprestimo);
+                System.out.println("Empréstimo realizado com sucesso. ID: "+emprestimo.getId());
             }catch (DateTimeParseException ex) {
                 System.out.println("Data ou hora no formato inválido!");                
             }
