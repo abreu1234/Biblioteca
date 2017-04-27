@@ -16,7 +16,7 @@ public class Cliente {
         this.totalLivrosRetirados = 0;
         this.diasAtraso = 0;
     }
-
+  
     public String getMatricula() {
         return matricula;
     }
@@ -28,7 +28,7 @@ public class Cliente {
     public String getTelefone() {
         return telefone;
     }
-    
+  
     public int getLivrosRetirados() {
         return livrosRetirados;
     }
