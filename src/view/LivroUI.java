@@ -52,26 +52,30 @@ public class LivroUI {
         String matricula = Console.scanString("Matrícula do cliente: ");
         Cliente cliente = listaClientes.buscarCliente(matricula);
         if( cliente != null ) {
-            String dataEntrega = Console.scanString("Data da entrega: ");
-            Emprestimo emprestimo = new Emprestimo(cliente, DateUtil.stringToDate(dataEntrega));
-            int maxLivro = 0;
-            do{
-                String isbn = Console.scanString("ISBN do livro: ");
-                Livro livro = lista.buscarLivro(isbn);
-                if ( livro != null && livro.getDisponivel() ) {
-                    maxLivro++;
-                    emprestimo.adicionarLivro(livro);
-                    livro.setDisponivel(false);
-                    if(maxLivro < 3) {
-                        int outroLivro = Console.scanInt("Deseja retirar outro livro?: ");
-                        if(outroLivro != 1)
-                            maxLivro = 3;
-                    }
-                }else{
-                    System.out.println("Livro indisponível ou não existe.");
-                } 
-            }while(maxLivro < 3);
-            System.out.println("Empréstimo realizado com sucesso. ID: "+emprestimo);
+            try{
+                String dataEntrega = Console.scanString("Data da entrega: ");
+                Emprestimo emprestimo = new Emprestimo(cliente, DateUtil.stringToDate(dataEntrega));
+                int maxLivro = 0;
+                do{
+                    String isbn = Console.scanString("ISBN do livro: ");
+                    Livro livro = lista.buscarLivro(isbn);
+                    if ( livro != null && livro.getDisponivel() ) {
+                        maxLivro++;
+                        emprestimo.adicionarLivro(livro);
+                        livro.setDisponivel(false);
+                        if(maxLivro < 3) {
+                            int outroLivro = Console.scanInt("Deseja retirar outro livro?: ");
+                            if(outroLivro != 1)
+                                maxLivro = 3;
+                        }
+                    }else{
+                        System.out.println("Livro indisponível ou não existe.");
+                    } 
+                }while(maxLivro < 3);
+                System.out.println("Empréstimo realizado com sucesso. ID: "+emprestimo);
+            }catch (DateTimeParseException ex) {
+                System.out.println("Data ou hora no formato inválido!");                
+            }
         }else{
             System.out.println("Cliente não existe.");
         }      
