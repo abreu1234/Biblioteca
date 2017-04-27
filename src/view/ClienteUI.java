@@ -1,5 +1,6 @@
 package view;
 
+import java.util.List;
 import model.Cliente;
 import repositorio.RepositorioClientes;
 import util.Console;
@@ -25,6 +26,9 @@ public class ClienteUI {
                 case ClienteMenu.OP_LISTAR:
                     listar();
                     break;
+                case ClienteMenu.OP_MAIS_RETIRARAM:
+                    listar();
+                    break;
                 default:
                     System.out.println("Opção inválida..");
 
@@ -44,20 +48,19 @@ public class ClienteUI {
         }
     }
     
-    public void listar() {
-        if(lista.getListaClientes().size() <= 0){
+    public void imprimir(List<Cliente> clientes) {
+        if(clientes.size() <= 0){
             System.out.println("-----------------------------");        
             System.out.println("Nao ha clientes cadastrados");
             System.out.println("-----------------------------\n");
-        }
-        else{
+        }else{
             System.out.println("-----------------------------\n");
             System.out.println(String.format("%-10s", "MATRÍCULA") + "\t"
                     + String.format("%-20s", "|NOME") + "\t"
                     + String.format("%-20s", "|TELEFONE") + "\t"
                     + String.format("%-10s", "|LIVROS RETIRADOS") + "\t"
             );
-            for (Cliente cliente : lista.getListaClientes()) {
+            for (Cliente cliente : clientes) {
                 System.out.println(String.format("%-10s", cliente.getMatricula()) + "\t"
                         + String.format("%-20s", "|" + cliente.getNome()) + "\t"
                         + String.format("%-20s", "|" + cliente.getTelefone()) + "\t"
@@ -65,7 +68,10 @@ public class ClienteUI {
                 );
             }
         }
-
+    }
+    
+    public void listar() {
+        imprimir(lista.getListaClientesRetiraram());
     }
     
 }

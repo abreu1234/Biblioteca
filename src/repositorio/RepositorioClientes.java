@@ -38,4 +38,15 @@ public class RepositorioClientes {
         return null;
     }
     
+    public List<Cliente> getListaClientesRetiraram() {
+        List<Cliente> clientes = new ArrayList<Cliente>();
+        for (Cliente cliente: this.clientes) {
+            if(cliente.getTotalLivrosRetirados() > 0) {
+                clientes.add(cliente);
+            }
+        }
+        
+        return clientes;
+    }
+    
 }
