@@ -42,7 +42,7 @@ public class Cliente {
     }
     
     public void setDiasAtraso(long diasAtraso) {
-        this.diasAtraso = diasAtraso;
+        this.diasAtraso += diasAtraso;
     }
     
     public void setLivrosRetirados(int livrosRetirados) {
