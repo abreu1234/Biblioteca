@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class Cliente {
     
+    private int id;
     private String matricula, nome, telefone;
     private long diasAtraso;
     private int livrosRetirados, totalLivrosRetirados;
@@ -15,6 +16,10 @@ public class Cliente {
         this.livrosRetirados = 0;
         this.totalLivrosRetirados = 0;
         this.diasAtraso = 0;
+    }
+    
+    public int getId() {
+        return this.id;
     }
   
     public String getMatricula() {
@@ -39,6 +44,10 @@ public class Cliente {
     
     public long getDiasAstraso() {
         return diasAtraso;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
     }
     
     public void setDiasAtraso(long diasAtraso) {

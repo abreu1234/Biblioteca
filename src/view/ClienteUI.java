@@ -1,5 +1,6 @@
 package view;
 
+import dao.impl_DB.ClienteDaoDb;
 import java.util.List;
 import model.Cliente;
 import repositorio.RepositorioClientes;
@@ -9,8 +10,10 @@ import view.menu.ClienteMenu;
 public class ClienteUI {
     
     private RepositorioClientes lista;
+    private ClienteDaoDb clienteDaoDb;
 
     public ClienteUI(RepositorioClientes lista) {
+        this.clienteDaoDb = new ClienteDaoDb();
         this.lista = lista;
     }
     
@@ -41,14 +44,10 @@ public class ClienteUI {
     
     private void cadastrar() {
         String matricula = Console.scanString("Matrícula: ");
-        if (lista.clienteExiste(matricula)) {
-            System.out.println("Cliente já existe");
-        } else {
-            String nome = Console.scanString("Nome: ");
-            String autores = Console.scanString("Telefone: ");
-            lista.addCliente(new Cliente(matricula, nome, autores));
-            System.out.println("Cliente " + nome + " cadastrado com sucesso!");
-        }
+        String nome = Console.scanString("Nome: ");
+        String telefone = Console.scanString("Telefone: ");
+        clienteDaoDb.salvar(new Cliente(matricula, nome, telefone));
+        System.out.println("Cliente " + nome + " cadastrado com sucesso!");
     }
     
     public void imprimir(List<Cliente> clientes) {
