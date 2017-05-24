@@ -189,4 +189,82 @@ public class ClienteDaoDb implements ClienteDao {
         return (null);
     }
     
+    public List<Cliente> listarClientesRetiraram() {
+        List<Cliente> listaClientes = new ArrayList<>();
+
+        String sql = "SELECT * FROM cliente WHERE livrosRetirados > 0 ORDER BY livrosRetirados DESC";
+
+        try {
+            conectar(sql);
+
+            ResultSet resultado = comando.executeQuery();
+
+            while (resultado.next()) {
+                int id = resultado.getInt("id");
+                String matricula = resultado.getString("matricula");
+                String nome = resultado.getString("nome");
+                String telefone = resultado.getString("telefone");
+
+                Cliente cliente = new Cliente(id, matricula, nome, telefone);
+
+                int livrosRetirados = resultado.getInt("livrosRetirados");
+                int totalLivrosRetirados = resultado.getInt("totalLivrosRetirados");
+                long diasAtraso = resultado.getInt("diasAtraso");
+                cliente.setLivrosRetirados(livrosRetirados);
+                cliente.setTotalLivrosRetirados(totalLivrosRetirados);
+                cliente.setDiasAtraso(diasAtraso);
+                
+                listaClientes.add(cliente);
+
+            }
+
+        } catch (SQLException ex) {
+            System.err.println("Erro de Sistema - Problema ao buscar os clientes do Banco de Dados!");
+            throw new BDException(ex);
+        } finally {
+            fecharConexao();
+        }
+
+        return (listaClientes);
+    }
+    
+    public List<Cliente> listarClientesAtrasados() {
+        List<Cliente> listaClientes = new ArrayList<>();
+
+        String sql = "SELECT * FROM cliente WHERE diasAtraso > 0 ORDER BY diasAtraso DESC";
+
+        try {
+            conectar(sql);
+
+            ResultSet resultado = comando.executeQuery();
+
+            while (resultado.next()) {
+                int id = resultado.getInt("id");
+                String matricula = resultado.getString("matricula");
+                String nome = resultado.getString("nome");
+                String telefone = resultado.getString("telefone");
+
+                Cliente cliente = new Cliente(id, matricula, nome, telefone);
+
+                int livrosRetirados = resultado.getInt("livrosRetirados");
+                int totalLivrosRetirados = resultado.getInt("totalLivrosRetirados");
+                long diasAtraso = resultado.getInt("diasAtraso");
+                cliente.setLivrosRetirados(livrosRetirados);
+                cliente.setTotalLivrosRetirados(totalLivrosRetirados);
+                cliente.setDiasAtraso(diasAtraso);
+                
+                listaClientes.add(cliente);
+
+            }
+
+        } catch (SQLException ex) {
+            System.err.println("Erro de Sistema - Problema ao buscar os clientes do Banco de Dados!");
+            throw new BDException(ex);
+        } finally {
+            fecharConexao();
+        }
+
+        return (listaClientes);
+    }
+    
 }

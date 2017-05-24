@@ -137,11 +137,11 @@ public class ClienteUI {
     }
     
     public void listarClientesRetiraram() {
-        imprimir(lista.getListaClientesRetiraram());
+        imprimir(clienteDaoDb.listarClientesRetiraram());
     }
     
     public void listarClientesAtrasados() {
-        imprimir(lista.getListaClientesRetiraram());
+        imprimir(clienteDaoDb.listarClientesAtrasados());
     }
     
 }
