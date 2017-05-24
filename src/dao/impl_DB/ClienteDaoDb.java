@@ -2,10 +2,10 @@ package dao.impl_DB;
 
 import dao.ClienteDao;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import model.Cliente;
 
@@ -67,7 +67,7 @@ public class ClienteDaoDb implements ClienteDao {
             }
 
         } catch (SQLException ex) {
-            System.err.println("Erro de Sistema - Problema ao salvar paciente no Banco de Dados!");
+            System.err.println("Erro de Sistema - Problema ao salvar cliente no Banco de Dados!");
             throw new BDException(ex);
         } finally {
             fecharConexao();
@@ -76,22 +76,117 @@ public class ClienteDaoDb implements ClienteDao {
 
     @Override
     public void deletar(Cliente cliente) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            String sql = "DELETE FROM cliente WHERE id = ?";
+
+            conectar(sql);
+            comando.setInt(1, cliente.getId());
+            comando.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.err.println("Erro de Sistema - Problema ao deletar cliente no Banco de Dados!");
+            throw new BDException(ex);
+        } finally {
+            fecharConexao();
+        }
     }
 
     @Override
     public void atualizar(Cliente cliente) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            String sql = "UPDATE cliente SET nome=?, telefone=? "
+                    + "WHERE id=?";
+
+            conectar(sql);
+            comando.setString(1, cliente.getNome());
+            comando.setString(2, cliente.getTelefone());
+            comando.setInt(3, cliente.getId());
+            comando.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.err.println("Erro de Sistema - Problema ao atualizar paciente no Banco de Dados!");
+            throw new BDException(ex);
+        } finally {
+            fecharConexao();
+        }
     }
 
     @Override
     public List<Cliente> listar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Cliente> listaClientes = new ArrayList<>();
+
+        String sql = "SELECT * FROM cliente";
+
+        try {
+            conectar(sql);
+
+            ResultSet resultado = comando.executeQuery();
+
+            while (resultado.next()) {
+                int id = resultado.getInt("id");
+                String matricula = resultado.getString("matricula");
+                String nome = resultado.getString("nome");
+                String telefone = resultado.getString("telefone");
+
+                Cliente cliente = new Cliente(id, matricula, nome, telefone);
+
+                int livrosRetirados = resultado.getInt("livrosRetirados");
+                int totalLivrosRetirados = resultado.getInt("totalLivrosRetirados");
+                long diasAtraso = resultado.getInt("diasAtraso");
+                cliente.setLivrosRetirados(livrosRetirados);
+                cliente.setTotalLivrosRetirados(totalLivrosRetirados);
+                cliente.setDiasAtraso(diasAtraso);
+                
+                listaClientes.add(cliente);
+
+            }
+
+        } catch (SQLException ex) {
+            System.err.println("Erro de Sistema - Problema ao buscar os clientes do Banco de Dados!");
+            throw new BDException(ex);
+        } finally {
+            fecharConexao();
+        }
+
+        return (listaClientes);
     }
 
     @Override
     public Cliente procurarPorId(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String sql = "SELECT * FROM cliente WHERE id = ?";
+
+        try {
+            conectar(sql);
+            comando.setInt(1, id);
+
+            ResultSet resultado = comando.executeQuery();
+
+            if (resultado.next()) {
+                String matricula = resultado.getString("matricula");
+                String nome = resultado.getString("nome");
+                String telefone = resultado.getString("telefone");
+
+                Cliente cliente = new Cliente(id, matricula, nome, telefone);
+                
+                int livrosRetirados = resultado.getInt("livrosRetirados");
+                int totalLivrosRetirados = resultado.getInt("totalLivrosRetirados");
+                long diasAtraso = resultado.getInt("diasAtraso");
+                cliente.setLivrosRetirados(livrosRetirados);
+                cliente.setTotalLivrosRetirados(totalLivrosRetirados);
+                cliente.setDiasAtraso(diasAtraso);
+                
+                return cliente;
+
+            }
+
+        } catch (SQLException ex) {
+            System.err.println("Erro de Sistema - Problema ao buscar o cliente pelo id do Banco de Dados!");
+            throw new BDException(ex);
+        } finally {
+            fecharConexao();
+        }
+
+        return (null);
     }
     
 }

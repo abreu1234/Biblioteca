@@ -29,6 +29,12 @@ public class ClienteUI {
                 case ClienteMenu.OP_LISTAR:
                     listar();
                     break;
+                case ClienteMenu.OP_ATUALIZAR:
+                    atualizar();
+                    break;
+                case ClienteMenu.OP_DELETAR:
+                    deletar();
+                    break;
                 case ClienteMenu.OP_MAIS_RETIRARAM:
                     listarClientesRetiraram();
                     break;
@@ -50,6 +56,58 @@ public class ClienteUI {
         System.out.println("Cliente " + nome + " cadastrado com sucesso!");
     }
     
+    private void deletar() {
+        int id = Console.scanInt("ID do cliente a ser deletado: ");
+        Cliente cliente = clienteDaoDb.procurarPorId(id);
+        this.imprimir(cliente);
+        if (UIUtil.getConfirmacao("Realmente deseja excluir esse paciente?")) {
+            clienteDaoDb.deletar(cliente);
+            System.out.println("Paciente deletado com sucesso!");
+        } else {
+            System.out.println("Operacao cancelada!");
+        }
+    }
+    
+    private void atualizar() {
+        int id = Console.scanInt("ID do cliente: ");
+
+        Cliente cliente = clienteDaoDb.procurarPorId(id);
+        if(cliente == null) {
+            System.out.println("Cliente não encontrado");
+        }else {
+            this.imprimir(cliente);
+
+            System.out.println("Digite os dados do cliente que quer alterar [Vazio caso nao queira]");
+            String nome = Console.scanString("Nome: ");
+            String telefone = Console.scanString("Telefone: ");
+            if (!nome.isEmpty()) {
+                cliente.setNome(nome);
+            }
+            if (!telefone.isEmpty()) {
+                cliente.setTelefone(telefone);
+            }
+
+            clienteDaoDb.atualizar(cliente);
+            System.out.println("Cliente " + nome + " atualizado com sucesso!");
+        }
+    }
+    
+    private void imprimir(Cliente cliente) {
+        System.out.println("-----------------------------\n");
+        System.out.println(String.format("%-10s", "ID") + "\t"
+                + String.format("%-10s", "MATRÍCULA") + "\t"
+                + String.format("%-20s", "|NOME") + "\t"
+                + String.format("%-20s", "|TELEFONE") + "\t"
+                + String.format("%-10s", "|LIVROS RETIRADOS") + "\t"
+        );
+        System.out.println(String.format("%-10s", cliente.getId()) + "\t"
+                        + String.format("%-10s", cliente.getMatricula()) + "\t"
+                        + String.format("%-20s", "|" + cliente.getNome()) + "\t"
+                        + String.format("%-20s", "|" + cliente.getTelefone()) + "\t"
+                        + String.format("%-10s", "|" + cliente.getTotalLivrosRetirados()) + "\t"
+                );
+    }
+    
     public void imprimir(List<Cliente> clientes) {
         if(clientes.size() <= 0){
             System.out.println("-----------------------------");        
@@ -57,13 +115,15 @@ public class ClienteUI {
             System.out.println("-----------------------------\n");
         }else{
             System.out.println("-----------------------------\n");
-            System.out.println(String.format("%-10s", "MATRÍCULA") + "\t"
-                    + String.format("%-20s", "|NOME") + "\t"
-                    + String.format("%-20s", "|TELEFONE") + "\t"
-                    + String.format("%-10s", "|LIVROS RETIRADOS") + "\t"
-            );
+            System.out.println(String.format("%-10s", "ID") + "\t"
+                + String.format("%-10s", "MATRÍCULA") + "\t"
+                + String.format("%-20s", "|NOME") + "\t"
+                + String.format("%-20s", "|TELEFONE") + "\t"
+                + String.format("%-10s", "|LIVROS RETIRADOS") + "\t"
+        );
             for (Cliente cliente : clientes) {
-                System.out.println(String.format("%-10s", cliente.getMatricula()) + "\t"
+                System.out.println(String.format("%-10s", cliente.getId()) + "\t"
+                        + String.format("%-10s", cliente.getMatricula()) + "\t"
                         + String.format("%-20s", "|" + cliente.getNome()) + "\t"
                         + String.format("%-20s", "|" + cliente.getTelefone()) + "\t"
                         + String.format("%-10s", "|" + cliente.getTotalLivrosRetirados()) + "\t"
@@ -73,7 +133,7 @@ public class ClienteUI {
     }
     
     public void listar() {
-        imprimir(lista.getListaClientes());
+        imprimir(clienteDaoDb.listar());
     }
     
     public void listarClientesRetiraram() {

@@ -18,6 +18,16 @@ public class Cliente {
         this.diasAtraso = 0;
     }
     
+    public Cliente(int id, String matricula, String nome, String telefone) {
+        this.id = id;
+        this.matricula = matricula;
+        this.nome = nome;
+        this.telefone = telefone;
+        this.livrosRetirados = 0;
+        this.totalLivrosRetirados = 0;
+        this.diasAtraso = 0;
+    }
+    
     public int getId() {
         return this.id;
     }
@@ -50,12 +60,24 @@ public class Cliente {
         this.id = id;
     }
     
+    public void setNome(String nome) {
+        this.nome = nome;
+    }    
+    
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+    
     public void setDiasAtraso(long diasAtraso) {
         this.diasAtraso += diasAtraso;
     }
     
     public void setLivrosRetirados(int livrosRetirados) {
         this.livrosRetirados = livrosRetirados;
+    }
+    
+    public void setTotalLivrosRetirados(int totalLivrosRetirados) {
+        this.totalLivrosRetirados = totalLivrosRetirados;
     }
     
     public void livroRetirado() {
