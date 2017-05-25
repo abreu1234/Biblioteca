@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 25-Maio-2017 às 01:03
+-- Generation Time: 26-Maio-2017 às 01:52
 -- Versão do servidor: 10.1.19-MariaDB
--- PHP Version: 5.6.28
+-- PHP Version: 5.5.38
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -44,6 +44,30 @@ INSERT INTO `cliente` (`id`, `matricula`, `nome`, `telefone`, `diasAtraso`, `liv
 (1, '1234', 'Rafael Abreu', '8888888', 0, 0, 1),
 (2, '12313', 'Fulano', '44444', 0, 0, 3);
 
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `livro`
+--
+
+CREATE TABLE `livro` (
+  `id` int(11) NOT NULL,
+  `isbn` varchar(20) DEFAULT NULL,
+  `nome` varchar(55) DEFAULT NULL,
+  `autores` varchar(255) DEFAULT NULL,
+  `editora` varchar(50) DEFAULT NULL,
+  `qtdRetirado` int(11) DEFAULT '0',
+  `disponivel` tinyint(1) DEFAULT '1',
+  `dataPublicacao` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `livro`
+--
+
+INSERT INTO `livro` (`id`, `isbn`, `nome`, `autores`, `editora`, `qtdRetirado`, `disponivel`, `dataPublicacao`) VALUES
+(1, '1324', 'Livro 1', 'Autor', 'Editora', 0, 1, '2015-12-12');
+
 --
 -- Indexes for dumped tables
 --
@@ -56,6 +80,12 @@ ALTER TABLE `cliente`
   ADD UNIQUE KEY `matricula` (`matricula`);
 
 --
+-- Indexes for table `livro`
+--
+ALTER TABLE `livro`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -64,6 +94,11 @@ ALTER TABLE `cliente`
 --
 ALTER TABLE `cliente`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `livro`
+--
+ALTER TABLE `livro`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
