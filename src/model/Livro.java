@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class Livro {
     
+    private int id;
     private String isbn, nome, autores, editora;
     private LocalDate dataPublicacao;
     private int qtdRetirado;
@@ -20,6 +21,22 @@ public class Livro {
         this.qtdRetirado = 0;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getQtdRetirado() {
+        return qtdRetirado;
+    }
+
+    public void setQtdRetirado(int qtdRetirado) {
+        this.qtdRetirado = qtdRetirado;
+    }
+    
     public String getIsbn() {
         return isbn;
     }

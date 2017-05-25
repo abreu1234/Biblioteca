@@ -1,5 +1,7 @@
 package view;
 
+import dao.impl_DB.LivroDaoDb;
+import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import model.Cliente;
@@ -17,11 +19,13 @@ public class LivroUI {
     private RepositorioLivros lista;
     private RepositorioEmprestimos listaEmprestimo;
     private RepositorioClientes listaClientes;
+    private LivroDaoDb livroDaoDb;
 
     public LivroUI(RepositorioLivros lista, RepositorioClientes listaClientes, RepositorioEmprestimos listaEmprestimo) {
         this.lista = lista;
         this.listaEmprestimo = listaEmprestimo;
         this.listaClientes = listaClientes;
+        this.livroDaoDb = new LivroDaoDb();
     }
     
     public void executar() {
@@ -101,21 +105,17 @@ public class LivroUI {
     }
     
     private void cadastrar() {
-        String isbn = Console.scanString("ISBN: ");
-        if (lista.livroExiste(isbn)) {
-            System.out.println("Livro já existe");
-        } else {
+        try {
+            String isbn = Console.scanString("ISBN: ");
             String nome = Console.scanString("Nome: ");
             String autores = Console.scanString("Autores: ");
             String editora = Console.scanString("Editora: ");
             String dataString = Console.scanString("Data de Publicação: ");
-            try {
-                lista.addLivro(new Livro(isbn, nome, autores, editora, DateUtil.stringToDate(dataString)));
-                System.out.println("Livro " + nome + " cadastrado com sucesso!");
-            
-            } catch (DateTimeParseException ex) {
-                System.out.println("Formato de Data inválido!");
-            }
+
+            livroDaoDb.salvar(new Livro(isbn, nome, autores, editora, DateUtil.stringToDate(dataString)));
+            System.out.println("Livro " + nome + " cadastrado com sucesso!");
+        } catch (DateTimeParseException ex) {
+            System.out.println("Formato de Data inválido!");
         }
     }
     
