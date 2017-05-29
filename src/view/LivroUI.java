@@ -1,7 +1,6 @@
 package view;
 
 import dao.impl_DB.LivroDaoDb;
-import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import model.Cliente;
@@ -40,6 +39,12 @@ public class LivroUI {
                 case LivroMenu.OP_LISTAR:
                     listar();
                     break;
+                case LivroMenu.OP_ATUALIZAR:
+                    atualizar();
+                    break;
+                case LivroMenu.OP_REMOVER:
+                    deletar();
+                    break;
                 case LivroMenu.OP_EMPRESTIMO:
                     emprestar();
                     break;
@@ -57,6 +62,18 @@ public class LivroUI {
 
             }
         } while (opcao != LivroMenu.OP_VOLTAR);
+    }
+    
+    private void deletar() {
+        int id = Console.scanInt("ID do livro a ser deletado: ");
+        Livro livro = livroDaoDb.procurarPorId(id);
+        this.imprimir(livro);
+        if (UIUtil.getConfirmacao("Realmente deseja excluir esse livro?")) {
+            livroDaoDb.deletar(livro);
+            System.out.println("Livro deletado com sucesso!");
+        } else {
+            System.out.println("Operacao cancelada!");
+        }
     }
     
     private void emprestar() {
@@ -92,6 +109,39 @@ public class LivroUI {
         }      
     }
     
+    private void atualizar() {
+        int id = Console.scanInt("ID do livro: ");
+
+        Livro livro;
+        livro = livroDaoDb.procurarPorId(id);
+        if(livro == null) {
+            System.out.println("Livro não encontrado");
+        }else {
+            this.imprimir(livro);
+
+            System.out.println("Digite os dados do livro que quer alterar [Vazio caso nao queira]");
+            String nome = Console.scanString("Nome: ");
+            String autores = Console.scanString("Autores: ");
+            String editores = Console.scanString("Editores: ");
+            String dataPublicacao = Console.scanString("Data de publicação: ");
+            if (!nome.isEmpty()) {
+                livro.setNome(nome);
+            }
+            if (!autores.isEmpty()) {
+                livro.setAutores(autores);
+            }
+            if (!editores.isEmpty()) {
+                livro.setEditora(editores);
+            }            
+            if (!dataPublicacao.isEmpty()) {
+                livro.setDataPublicacao(DateUtil.stringToDate(dataPublicacao));
+            }            
+
+            livroDaoDb.atualizar(livro);
+            System.out.println("Livro " + livro.getNome() + " atualizado com sucesso!");
+        }
+    }
+    
     private void devolver() {
         String matricula = Console.scanString("Matrícula do cliente: ");
         Cliente cliente = listaClientes.buscarCliente(matricula);
@@ -120,7 +170,7 @@ public class LivroUI {
     }
     
     public void listar() {
-        imprimir(lista.getListaLivros());
+        imprimir(livroDaoDb.listar());
     }    
     
     public void livrosDisponiveis() {
@@ -129,6 +179,23 @@ public class LivroUI {
     
     public void livrosMaisRetirados() {
         imprimir(lista.getListaLivrosRetirados());
+    }
+    
+    private void imprimir(Livro livro) {
+        System.out.println("-----------------------------\n");
+            System.out.println(String.format("%-10s", "ISBN") + "\t"
+                    + String.format("%-20s", "|NOME") + "\t"
+                    + String.format("%-20s", "|AUTORES") + "\t"
+                    + String.format("%-20s", "|EDITORA") + "\t"
+                    + String.format("%-20s", "|DATA DE PUBLICAÇÃO")
+                    + String.format("%-10s", "|VEZES EMPRESTADO")); 
+        System.out.println(String.format("%-10s", livro.getIsbn()) + "\t"
+                        + String.format("%-20s", "|" + livro.getNome()) + "\t"
+                        + String.format("%-20s", "|" + livro.getAutores()) + "\t"
+                        + String.format("%-20s", "|" + livro.getEditora()) + "\t"
+                        + String.format("%-20s", "|" + DateUtil.dateToString(livro.getDataPublicacao()))
+                        + String.format("%-10s", "|" + livro.getLivroRetirado())
+        );
     }
     
     private void imprimir(List<Livro> livros) {
@@ -148,7 +215,6 @@ public class LivroUI {
                 System.out.println(String.format("%-10s", livro.getIsbn()) + "\t"
                         + String.format("%-20s", "|" + livro.getNome()) + "\t"
                         + String.format("%-20s", "|" + livro.getAutores()) + "\t"
-                        + String.format("%-20s", "|" + livro.getEditora()) + "\t"
                         + String.format("%-20s", "|" + livro.getEditora()) + "\t"
                         + String.format("%-20s", "|" + DateUtil.dateToString(livro.getDataPublicacao()))
                         + String.format("%-10s", "|" + livro.getLivroRetirado())

@@ -20,9 +20,44 @@ public class Livro {
         this.disponivel = true;
         this.qtdRetirado = 0;
     }
+    
+    public Livro(int id, String isbn, String nome, String autores, String editora, LocalDate dataPublicacao) {
+        this.id = id;
+        this.isbn = isbn;
+        this.nome = nome;
+        this.autores = autores;
+        this.editora = editora;
+        this.dataPublicacao = dataPublicacao;
+        this.disponivel = true;
+        this.qtdRetirado = 0;
+    }
 
+    public boolean isDisponivel() {
+        return disponivel;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setAutores(String autores) {
+        this.autores = autores;
+    }
+
+    public void setEditora(String editora) {
+        this.editora = editora;
+    }
+
+    public void setDataPublicacao(LocalDate dataPublicacao) {
+        this.dataPublicacao = dataPublicacao;
+    }
+    
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(int id) {

@@ -6,6 +6,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import model.Livro;
 
@@ -79,22 +81,119 @@ public class LivroDaoDb implements LivroDao{
 
     @Override
     public void deletar(Livro livro) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            String sql = "DELETE FROM livro WHERE id = ?";
+
+            conectar(sql);
+            comando.setInt(1, livro.getId());
+            comando.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.err.println("Erro de Sistema - Problema ao deletar livro no Banco de Dados!");
+            throw new BDException(ex);
+        } finally {
+            fecharConexao();
+        }
     }
 
     @Override
     public void atualizar(Livro livro) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            String sql = "UPDATE livro SET nome=?, autores=?, editora=?, dataPublicacao=? "
+                    + "WHERE id=?";
+
+            conectar(sql);
+            
+            comando.setString(1, livro.getNome());
+            comando.setString(2, livro.getAutores());
+            comando.setString(3, livro.getEditora());
+            Date dataSql = Date.valueOf(livro.getDataPublicacao());
+            comando.setDate(4, dataSql);
+            comando.setInt(5, livro.getId());
+                        
+            comando.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.err.println("Erro de Sistema - Problema ao atualizar paciente no Banco de Dados!");
+            throw new BDException(ex);
+        } finally {
+            fecharConexao();
+        }
     }
 
     @Override
     public List<Livro> listar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Livro> lista = new ArrayList<>();
+
+        String sql = "SELECT * FROM livro";
+
+        try {
+            conectar(sql);
+
+            ResultSet resultado = comando.executeQuery();
+
+            while (resultado.next()) {
+                int id = resultado.getInt("id");
+                String isbn = resultado.getString("isbn");
+                String nome = resultado.getString("nome");
+                String autores = resultado.getString("autores");
+                String editora = resultado.getString("editora");
+                int qtdRetirado = resultado.getInt("qtdRetirado");
+                boolean disponivel = resultado.getBoolean("qtdRetirado");
+                LocalDate dataPublicacao =  resultado.getDate("dataPublicacao").toLocalDate();
+
+                Livro livro = new Livro(id, isbn, nome, autores, editora, dataPublicacao);
+                livro.setDisponivel(disponivel);
+                livro.setQtdRetirado(qtdRetirado);
+                
+                lista.add(livro);
+
+            }
+
+        } catch (SQLException ex) {
+            System.err.println("Erro de Sistema - Problema ao buscar os livros do Banco de Dados!");
+            throw new BDException(ex);
+        } finally {
+            fecharConexao();
+        }
+
+        return (lista);
     }
 
     @Override
     public Livro procurarPorId(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String sql = "SELECT * FROM livro WHERE id = ?";
+
+        try {
+            conectar(sql);
+            comando.setInt(1, id);
+
+            ResultSet resultado = comando.executeQuery();
+
+            if (resultado.next()) {
+                String isbn = resultado.getString("isbn");
+                String nome = resultado.getString("nome");
+                String autores = resultado.getString("autores");
+                String editora = resultado.getString("editora");
+                int qtdRetirado = resultado.getInt("qtdRetirado");
+                boolean disponivel = resultado.getBoolean("qtdRetirado");
+                LocalDate dataPublicacao =  resultado.getDate("dataPublicacao").toLocalDate();
+
+                Livro livro = new Livro(id, isbn, nome, autores, editora, dataPublicacao);
+                livro.setDisponivel(disponivel);
+                livro.setQtdRetirado(qtdRetirado);
+                
+                return livro;
+            }
+
+        } catch (SQLException ex) {
+            System.err.println("Erro de Sistema - Problema ao buscar o paciente pelo id do Banco de Dados!");
+            throw new BDException(ex);
+        } finally {
+            fecharConexao();
+        }
+
+        return (null);
     }
     
 }
