@@ -153,7 +153,10 @@ public class ClienteDaoDb implements ClienteDao {
 
     @Override
     public Cliente procurarPorId(int id) {
-        String sql = "SELECT * FROM cliente WHERE id = ?";
+        String sql = "SELECT *, count(*) livrosRetirados FROM cliente c" +
+                " INNER JOIN emprestimo e ON (e.cliente_id = c.id)" +
+                " INNER JOIN emprestimo_livro el ON (el.emprestimo_id = e.id)" +
+                " WHERE e.entregue = false AND c.id = ?";
 
         try {
             conectar(sql);
@@ -169,6 +172,46 @@ public class ClienteDaoDb implements ClienteDao {
                 Cliente cliente = new Cliente(id, matricula, nome, telefone);
                 
                 int livrosRetirados = resultado.getInt("livrosRetirados");
+                int totalLivrosRetirados = resultado.getInt("totalLivrosRetirados");
+                long diasAtraso = resultado.getInt("diasAtraso");
+                cliente.setLivrosRetirados(livrosRetirados);
+                cliente.setTotalLivrosRetirados(totalLivrosRetirados);
+                cliente.setDiasAtraso(diasAtraso);
+                
+                return cliente;
+
+            }
+
+        } catch (SQLException ex) {
+            System.err.println("Erro de Sistema - Problema ao buscar o cliente pelo id do Banco de Dados!");
+            throw new BDException(ex);
+        } finally {
+            fecharConexao();
+        }
+
+        return (null);
+    }
+        
+    public Cliente procurarPorMatricula(String matricula) {
+        String sql = "SELECT *, count(*) qtdRetirados FROM cliente c" +
+                " INNER JOIN emprestimo e ON (e.cliente_id = c.id)" +
+                " INNER JOIN emprestimo_livro el ON (el.emprestimo_id = e.id)" +
+                " WHERE e.entregue = false AND c.matricula = ?";
+
+        try {
+            conectar(sql);
+            comando.setString(1, matricula);
+
+            ResultSet resultado = comando.executeQuery();
+
+            if (resultado.next()) {
+                int id = resultado.getInt("id");
+                String nome = resultado.getString("nome");
+                String telefone = resultado.getString("telefone");
+
+                Cliente cliente = new Cliente(id, matricula, nome, telefone);
+                
+                int livrosRetirados = resultado.getInt("qtdRetirados");
                 int totalLivrosRetirados = resultado.getInt("totalLivrosRetirados");
                 long diasAtraso = resultado.getInt("diasAtraso");
                 cliente.setLivrosRetirados(livrosRetirados);

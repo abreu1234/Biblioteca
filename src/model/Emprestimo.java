@@ -7,7 +7,6 @@ import java.util.List;
 
 public class Emprestimo {
     
-    private static int AUTO_INCREMENT = 1;
     private int id;
     private long diasAtraso;
     private Cliente cliente;
@@ -16,7 +15,6 @@ public class Emprestimo {
     private Boolean entregue;
     
     public Emprestimo(Cliente cliente, LocalDate dataEntrega) {
-        this.id = autoIncrement();   
         this.cliente = cliente;
         this.dataEntrega = dataEntrega;
         this.livros = new ArrayList<>();
@@ -24,8 +22,28 @@ public class Emprestimo {
         this.diasAtraso = 0;
     }
 
-    public static int getAUTO_INCREMENT() {
-        return AUTO_INCREMENT;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setDiasAtraso(long diasAtraso) {
+        this.diasAtraso = diasAtraso;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public void setDataEntrega(LocalDate dataEntrega) {
+        this.dataEntrega = dataEntrega;
+    }
+
+    public void setLivros(List<Livro> livros) {
+        this.livros = livros;
+    }
+
+    public void setEntregue(Boolean entregue) {
+        this.entregue = entregue;
     }
 
     public int getId() {
@@ -65,11 +83,7 @@ public class Emprestimo {
         this.cliente.setLivrosRetirados(0);
         this.entregue = true;
     }
-        
-    private int autoIncrement() {
-        return (AUTO_INCREMENT++);
-    }
-    
+            
     public void adicionarLivro(Livro l) {
         this.cliente.livroRetirado();
         livros.add(l);

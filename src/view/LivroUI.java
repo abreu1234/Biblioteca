@@ -1,5 +1,7 @@
 package view;
 
+import dao.impl_DB.ClienteDaoDb;
+import dao.impl_DB.EmprestimoDaoDb;
 import dao.impl_DB.LivroDaoDb;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -19,12 +21,16 @@ public class LivroUI {
     private RepositorioEmprestimos listaEmprestimo;
     private RepositorioClientes listaClientes;
     private LivroDaoDb livroDaoDb;
+    private EmprestimoDaoDb emprestimoDaoDb;
+    private ClienteDaoDb clienteDaoDb;
 
     public LivroUI(RepositorioLivros lista, RepositorioClientes listaClientes, RepositorioEmprestimos listaEmprestimo) {
         this.lista = lista;
         this.listaEmprestimo = listaEmprestimo;
         this.listaClientes = listaClientes;
         this.livroDaoDb = new LivroDaoDb();
+        this.emprestimoDaoDb = new EmprestimoDaoDb();
+        this.clienteDaoDb = new ClienteDaoDb();
     }
     
     public void executar() {
@@ -78,27 +84,29 @@ public class LivroUI {
     
     private void emprestar() {
         String matricula = Console.scanString("Matrícula do cliente: ");
-        Cliente cliente = listaClientes.buscarCliente(matricula);
-        if( cliente != null && cliente.getLivrosRetirados() < 3 ) {
+        Cliente cliente = clienteDaoDb.procurarPorMatricula(matricula);
+        if( cliente != null && cliente.getLivrosRetirados() <= 3 ) {
             try{
                 String dataEntrega = Console.scanString("Data da entrega: ");
                 Emprestimo emprestimo = new Emprestimo(cliente, DateUtil.stringToDate(dataEntrega));
                 int outroLivro = 0;
                 do{
                     String isbn = Console.scanString("ISBN do livro: ");
-                    Livro livro = lista.buscarLivro(isbn);
+                    Livro livro = livroDaoDb.procurarPorIsbn(isbn);
                     if ( livro != null && livro.getDisponivel() ) {
                         emprestimo.adicionarLivro(livro);
                         livro.setDisponivel(false);
-                        if(cliente.getLivrosRetirados() < 3) {
+                        if( cliente.getLivrosRetirados() < 3) {
                             outroLivro = Console.scanInt("Deseja retirar outro livro?: ");
                         }
                     }else{
                         System.out.println("Livro indisponível ou não existe.");
                     } 
-                }while(cliente.getLivrosRetirados() < 3 && outroLivro == 1);
-                this.listaEmprestimo.addEmprestimo(emprestimo);
-                System.out.println("Empréstimo realizado com sucesso. ID: "+emprestimo.getId());
+                }while(cliente.getLivrosRetirados() <= 3 && outroLivro == 1);
+                if(emprestimo.getLivros().size() > 0) {
+                    emprestimoDaoDb.emprestar(emprestimo);
+                    System.out.println("Empréstimo realizado com sucesso. ID: "+emprestimo.getId());
+                }
             }catch (DateTimeParseException ex) {
                 System.out.println("Data ou hora no formato inválido!");                
             }catch(Exception e) {
@@ -110,10 +118,10 @@ public class LivroUI {
     }
     
     private void atualizar() {
-        int id = Console.scanInt("ID do livro: ");
+        String isbn = Console.scanString("ISBN do livro: ");
 
         Livro livro;
-        livro = livroDaoDb.procurarPorId(id);
+        livro = livroDaoDb.procurarPorIsbn(isbn);
         if(livro == null) {
             System.out.println("Livro não encontrado");
         }else {
@@ -143,15 +151,14 @@ public class LivroUI {
     }
     
     private void devolver() {
-        String matricula = Console.scanString("Matrícula do cliente: ");
-        Cliente cliente = listaClientes.buscarCliente(matricula);
-        Emprestimo emprestimo = this.listaEmprestimo.buscar(cliente);
-        if( emprestimo != null ) {
-            emprestimo.entregar();
-            System.out.println("Livros entregues com sucesso. Dias de atraso: "+emprestimo.getDiasAtraso());
-        }else{
-            System.out.println("Cliente não possui empréstimos pendentes.");
-        }   
+        //int id = Console.scanString("ID do emprestimo: ");
+        //Emprestimo emprestimo = emprestimoDaoDb.procurarPorId();
+//        if( emprestimo != null ) {
+//            emprestimo.entregar();
+//            System.out.println("Livros entregues com sucesso. Dias de atraso: "+emprestimo.getDiasAtraso());
+//        }else{
+//            System.out.println("Cliente não possui empréstimos pendentes.");
+//        }   
     }
     
     private void cadastrar() {
