@@ -126,8 +126,9 @@ public class LivroDaoDb implements LivroDao{
         List<Livro> lista = new ArrayList<>();
 
         String sql = "SELECT *, entregue disponivel FROM livro l" +
-                " INNER JOIN emprestimo_livro el ON (el.livro_id = l.id)" +
-                " INNER JOIN emprestimo e ON (el.emprestimo_id = e.id)";
+                        " LEFT JOIN emprestimo_livro el ON (el.livro_id = l.id)" +
+                        " LEFT JOIN emprestimo e ON (el.emprestimo_id = e.id)" +
+                        " GROUP BY l.id";
 
         try {
             conectar(sql);
@@ -165,8 +166,8 @@ public class LivroDaoDb implements LivroDao{
     @Override
     public Livro procurarPorId(int id) {
         String sql = "SELECT *, entregue disponivel FROM livro l" +
-                " INNER JOIN emprestimo_livro el ON (el.livro_id = l.id)" +
-                " INNER JOIN emprestimo e ON (el.emprestimo_id = e.id) WHERE l.id = ?";
+                " LEFT JOIN emprestimo_livro el ON (el.livro_id = l.id)" +
+                " LEFT JOIN emprestimo e ON (el.emprestimo_id = e.id) WHERE l.id = ?";
 
         try {
             conectar(sql);
@@ -202,8 +203,8 @@ public class LivroDaoDb implements LivroDao{
         
     public Livro procurarPorIsbn(String isbn) {
         String sql = "SELECT * FROM livro l" +
-                " INNER JOIN emprestimo_livro el ON (el.livro_id = l.id)" +
-                " INNER JOIN emprestimo e ON (el.emprestimo_id = e.id) WHERE l.isbn = ?";
+                " LEFT JOIN emprestimo_livro el ON (el.livro_id = l.id)" +
+                " LEFT JOIN emprestimo e ON (el.emprestimo_id = e.id) WHERE l.isbn = ?";
 
         try {
             conectar(sql);
