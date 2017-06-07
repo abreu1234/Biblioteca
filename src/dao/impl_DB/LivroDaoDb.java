@@ -125,7 +125,7 @@ public class LivroDaoDb implements LivroDao{
     public List<Livro> listar() {
         List<Livro> lista = new ArrayList<>();
 
-        String sql = "SELECT *, entregue disponivel FROM livro l" +
+        String sql = "SELECT *, entregue disponivel, count(el.livro_id) FROM livro l" +
                         " LEFT JOIN emprestimo_livro el ON (el.livro_id = l.id)" +
                         " LEFT JOIN emprestimo e ON (el.emprestimo_id = e.id)" +
                         " GROUP BY l.id";
@@ -181,7 +181,7 @@ public class LivroDaoDb implements LivroDao{
                 String autores = resultado.getString("autores");
                 String editora = resultado.getString("editora");
 //                int qtdRetirado = resultado.getInt("qtdRetirado");
-                boolean disponivel = resultado.getBoolean("entregue");
+                boolean disponivel = resultado.getBoolean("disponivel");
                 LocalDate dataPublicacao =  resultado.getDate("dataPublicacao").toLocalDate();
 
                 Livro livro = new Livro(id, isbn, nome, autores, editora, dataPublicacao);
@@ -202,7 +202,7 @@ public class LivroDaoDb implements LivroDao{
     }
         
     public Livro procurarPorIsbn(String isbn) {
-        String sql = "SELECT * FROM livro l" +
+        String sql = "SELECT *, IFNULL(entregue, true) disponivel FROM livro l" +
                 " LEFT JOIN emprestimo_livro el ON (el.livro_id = l.id)" +
                 " LEFT JOIN emprestimo e ON (el.emprestimo_id = e.id) WHERE l.isbn = ?";
 
@@ -218,7 +218,7 @@ public class LivroDaoDb implements LivroDao{
                 String autores = resultado.getString("autores");
                 String editora = resultado.getString("editora");
 //                int qtdRetirado = resultado.getInt("qtdRetirado");
-                boolean disponivel = resultado.getBoolean("entregue");
+                boolean disponivel = resultado.getBoolean("disponivel");
                 LocalDate dataPublicacao =  resultado.getDate("dataPublicacao").toLocalDate();
 
                 Livro livro = new Livro(id, isbn, nome, autores, editora, dataPublicacao);
@@ -229,7 +229,7 @@ public class LivroDaoDb implements LivroDao{
             }
 
         } catch (SQLException ex) {
-            System.err.println("Erro de Sistema - Problema ao buscar o paciente pelo id do Banco de Dados!");
+            System.err.println("Erro de Sistema - Problema ao buscar o livro pelo ISBN do Banco de Dados!");
             throw new BDException(ex);
         } finally {
             fecharConexao();
