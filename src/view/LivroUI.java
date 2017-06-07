@@ -85,7 +85,7 @@ public class LivroUI {
     private void emprestar() {
         String matricula = Console.scanString("Matrícula do cliente: ");
         Cliente cliente = clienteDaoDb.procurarPorMatricula(matricula);
-        if( cliente != null && cliente.getLivrosRetirados() <= 3 ) {
+        if( cliente != null && cliente.getLivrosRetirados() < 3 ) {
             try{
                 String dataEntrega = Console.scanString("Data da entrega: ");
                 Emprestimo emprestimo = new Emprestimo(cliente, DateUtil.stringToDate(dataEntrega));
@@ -102,7 +102,7 @@ public class LivroUI {
                     }else{
                         System.out.println("Livro indisponível ou não existe.");
                     } 
-                }while(cliente.getLivrosRetirados() <= 3 && outroLivro == 1);
+                }while(cliente.getLivrosRetirados() < 3 && outroLivro == 1);
                 if(emprestimo.getLivros().size() > 0) {
                     emprestimoDaoDb.emprestar(emprestimo);
                     System.out.println("Empréstimo realizado com sucesso. ID: "+emprestimo.getId());
