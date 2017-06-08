@@ -61,7 +61,7 @@ public class LivroUI {
                     livrosDisponiveis();
                     break;
                 case LivroMenu.OP_MAIS_RETIRADOS:
-                    livrosDisponiveis();
+                    livrosMaisRetirados();
                     break;
                 default:
                     System.out.println("Opção inválida..");
@@ -186,7 +186,7 @@ public class LivroUI {
     }
     
     public void livrosMaisRetirados() {
-        imprimir(lista.getListaLivrosRetirados());
+        imprimir(livroDaoDb.maisRetirados());
     }
     
     private void imprimir(Livro livro) {
