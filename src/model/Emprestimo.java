@@ -21,6 +21,15 @@ public class Emprestimo {
         this.entregue = false;
         this.diasAtraso = 0;
     }
+    
+    public Emprestimo(int id, Cliente cliente, LocalDate dataEntrega) {
+        this.id = id;
+        this.cliente = cliente;
+        this.dataEntrega = dataEntrega;
+        this.livros = new ArrayList<>();
+        this.entregue = false;
+        this.diasAtraso = 0;
+    }
 
     public void setId(int id) {
         this.id = id;

@@ -105,6 +105,36 @@ public class EmprestimoDaoDb {
         }
     }
     
+    public Emprestimo procurarPorId(int id) {
+        String sql = "SELECT * FROM emprestimo WHERE id = ?";
+
+//        try {
+//            conectar(sql);
+//            comando.setInt(1, id);
+//
+//            ResultSet resultado = comando.executeQuery();
+//
+//            if (resultado.next()) {
+//                String matricula = resultado.getString("matricula");
+//                String nome = resultado.getString("nome");
+//                String telefone = resultado.getString("telefone");
+//
+//                Emprestimo emprestimo = new ClienteEmprestimo(id, matricula, nome, telefone);
+//                
+//                return cliente;
+//
+//            }
+//
+//        } catch (SQLException ex) {
+//            System.err.println("Erro de Sistema - Problema ao buscar o cliente pelo id do Banco de Dados!");
+//            throw new BDException(ex);
+//        } finally {
+//            fecharConexao();
+//        }
+
+        return (null);
+    }
+    
     public void devolver(Emprestimo emprestimo) {
         try {
             String sql = "UPDATE emprestimo SET entregue=? "

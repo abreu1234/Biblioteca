@@ -151,14 +151,14 @@ public class LivroUI {
     }
     
     private void devolver() {
-        //int id = Console.scanString("ID do emprestimo: ");
-        //Emprestimo emprestimo = emprestimoDaoDb.procurarPorId();
-//        if( emprestimo != null ) {
-//            emprestimo.entregar();
-//            System.out.println("Livros entregues com sucesso. Dias de atraso: "+emprestimo.getDiasAtraso());
-//        }else{
-//            System.out.println("Cliente não possui empréstimos pendentes.");
-//        }   
+        int id = Console.scanInt("ID do emprestimo: ");
+        Emprestimo emprestimo = emprestimoDaoDb.procurarPorId(id);
+        if( emprestimo != null ) {
+            emprestimo.entregar();
+            System.out.println("Livros entregues com sucesso. Dias de atraso: "+emprestimo.getDiasAtraso());
+        }else{
+            System.out.println("Cliente não possui empréstimos pendentes.");
+        }   
     }
     
     private void cadastrar() {
