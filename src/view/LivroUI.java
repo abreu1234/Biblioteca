@@ -165,13 +165,20 @@ public class LivroUI {
     private void cadastrar() {
         try {
             String isbn = Console.scanString("ISBN: ");
-            String nome = Console.scanString("Nome: ");
-            String autores = Console.scanString("Autores: ");
-            String editora = Console.scanString("Editora: ");
-            String dataString = Console.scanString("Data de Publicação: ");
-
-            livroDaoDb.salvar(new Livro(isbn, nome, autores, editora, DateUtil.stringToDate(dataString)));
-            System.out.println("Livro " + nome + " cadastrado com sucesso!");
+            if(!isbn.isEmpty() && !livroDaoDb.checkIsbn(isbn)) {
+                String nome = Console.scanString("Nome: ");
+                String autores = Console.scanString("Autores: ");
+                String editora = Console.scanString("Editora: ");
+                String dataString = Console.scanString("Data de Publicação: ");
+                if(!nome.isEmpty() && !autores.isEmpty() && !editora.isEmpty() && !dataString.isEmpty()) {
+                    livroDaoDb.salvar(new Livro(isbn, nome, autores, editora, DateUtil.stringToDate(dataString)));
+                    System.out.println("Livro " + nome + " cadastrado com sucesso!");
+                }else{
+                    System.out.println("Preencha todas as informações!");
+                }
+            }else{
+                System.out.println("ISBN: " + isbn + " já existente!");
+            }
         } catch (DateTimeParseException ex) {
             System.out.println("Formato de Data inválido!");
         }

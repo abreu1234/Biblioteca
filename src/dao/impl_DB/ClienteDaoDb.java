@@ -315,4 +315,25 @@ public class ClienteDaoDb implements ClienteDao {
         return (listaClientes);
     }
     
+    public boolean checkMatricula(String matricula) {
+        String sql = "SELECT id FROM cliente WHERE matricula=?";
+        
+        boolean check = false;
+        try {
+            conectar(sql);
+            comando.setString(1, matricula);
+            ResultSet resultado = comando.executeQuery();
+
+            check = resultado.next();
+
+        } catch (SQLException ex) {
+            System.err.println("Erro de Sistema - Problema ao buscar os clientes do Banco de Dados!");
+            throw new BDException(ex);
+        } finally {
+            fecharConexao();
+        }
+        
+        return check;
+    }
+    
 }

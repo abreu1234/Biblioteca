@@ -316,5 +316,26 @@ public class LivroDaoDb implements LivroDao{
 
         return (lista);
     }
+    
+    public boolean checkIsbn(String isbn) {
+        String sql = "SELECT id FROM livro WHERE isbn=?";
+        
+        boolean check = false;
+        try {
+            conectar(sql);
+            comando.setString(1, isbn);
+            ResultSet resultado = comando.executeQuery();
+
+            check = resultado.next();
+
+        } catch (SQLException ex) {
+            System.err.println("Erro de Sistema - Problema ao buscar os clientes do Banco de Dados!");
+            throw new BDException(ex);
+        } finally {
+            fecharConexao();
+        }
+        
+        return check;
+    }
         
 }

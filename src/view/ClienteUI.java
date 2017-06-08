@@ -50,10 +50,18 @@ public class ClienteUI {
     
     private void cadastrar() {
         String matricula = Console.scanString("Matrícula: ");
-        String nome = Console.scanString("Nome: ");
-        String telefone = Console.scanString("Telefone: ");
-        clienteDaoDb.salvar(new Cliente(matricula, nome, telefone));
-        System.out.println("Cliente " + nome + " cadastrado com sucesso!");
+        if(!matricula.isEmpty() && !clienteDaoDb.checkMatricula(matricula)) {
+            String nome = Console.scanString("Nome: ");
+            String telefone = Console.scanString("Telefone: ");
+            if(!nome.isEmpty() && !telefone.isEmpty()) {
+                clienteDaoDb.salvar(new Cliente(matricula, nome, telefone));
+                System.out.println("Cliente " + nome + " cadastrado com sucesso!");
+            }else{
+                System.out.println("Preencha todas as informações!");
+            }
+        }else{
+            System.out.println("Matrícula " + matricula + " já existente!");
+        }
     }
     
     private void deletar() {
