@@ -182,7 +182,7 @@ public class LivroUI {
     }    
     
     public void livrosDisponiveis() {
-        imprimir(lista.getListaLivrosDisponiveis());
+        imprimir(livroDaoDb.disponiveis());
     }
     
     public void livrosMaisRetirados() {

@@ -237,5 +237,44 @@ public class LivroDaoDb implements LivroDao{
 
         return (null);
     }
+    
+    public List<Livro> disponiveis() {
+        List<Livro> lista = new ArrayList<>();
+        
+        String sql = "SELECT * FROM livro " +
+                        "WHERE id NOT IN(SELECT l.id FROM livro l " +
+                        "INNER JOIN emprestimo_livro el ON (el.livro_id = l.id) " +
+                        "INNER JOIN emprestimo e ON (el.emprestimo_id = e.id) " +
+                        "WHERE e.entregue = false " +
+                        "GROUP BY l.id)";
+                try {
+            conectar(sql);
+
+            ResultSet resultado = comando.executeQuery();
+
+            while (resultado.next()) {
+                int id = resultado.getInt("id");
+                String isbn = resultado.getString("isbn");
+                String nome = resultado.getString("nome");
+                String autores = resultado.getString("autores");
+                String editora = resultado.getString("editora");
+                boolean disponivel = true;
+                LocalDate dataPublicacao =  resultado.getDate("dataPublicacao").toLocalDate();
+
+                Livro livro = new Livro(id, isbn, nome, autores, editora, dataPublicacao);
+                livro.setDisponivel(disponivel);
+                
+                lista.add(livro);
+            }
+
+        } catch (SQLException ex) {
+            System.err.println("Erro de Sistema - Problema ao buscar os livros disponíveis do Banco de Dados!");
+            throw new BDException(ex);
+        } finally {
+            fecharConexao();
+        }
+
+        return (lista);
+    }
         
 }
