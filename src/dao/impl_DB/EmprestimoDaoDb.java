@@ -5,7 +5,10 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import model.Cliente;
 import model.Emprestimo;
 import model.Livro;
 
@@ -108,41 +111,52 @@ public class EmprestimoDaoDb {
     public Emprestimo procurarPorId(int id) {
         String sql = "SELECT * FROM emprestimo WHERE id = ?";
 
-//        try {
-//            conectar(sql);
-//            comando.setInt(1, id);
-//
-//            ResultSet resultado = comando.executeQuery();
-//
-//            if (resultado.next()) {
-//                String matricula = resultado.getString("matricula");
-//                String nome = resultado.getString("nome");
-//                String telefone = resultado.getString("telefone");
-//
-//                Emprestimo emprestimo = new ClienteEmprestimo(id, matricula, nome, telefone);
-//                
-//                return cliente;
-//
-//            }
-//
-//        } catch (SQLException ex) {
-//            System.err.println("Erro de Sistema - Problema ao buscar o cliente pelo id do Banco de Dados!");
-//            throw new BDException(ex);
-//        } finally {
-//            fecharConexao();
-//        }
+        try {
+            conectar(sql);
+            comando.setInt(1, id);
+
+            ResultSet resultado = comando.executeQuery();
+
+            if (resultado.next()) {
+                boolean entregue = resultado.getBoolean("entregue");
+                int diasAtraso = resultado.getInt("diasAtraso");
+                int cliente_id = resultado.getInt("cliente_id");
+                LocalDate dataEntrega =  resultado.getDate("dataEntrega").toLocalDate();
+                
+                ClienteDaoDb clienteDaoDb = new ClienteDaoDb();
+                Cliente cliente = clienteDaoDb.procurarPorId(cliente_id);
+                                
+                Emprestimo emprestimo = new Emprestimo(id, cliente, dataEntrega);
+                emprestimo.setEntregue(entregue);
+                emprestimo.setDiasAtraso(diasAtraso);
+                
+                return emprestimo;
+
+            }
+
+        } catch (SQLException ex) {
+            System.err.println("Erro de Sistema - Problema ao buscar o cliente pelo id do Banco de Dados!");
+            throw new BDException(ex);
+        } finally {
+            fecharConexao();
+        }
 
         return (null);
     }
     
     public void devolver(Emprestimo emprestimo) {
         try {
-            String sql = "UPDATE emprestimo SET entregue=? "
+            String sql = "UPDATE emprestimo SET entregue=?, diasAtraso=? "
                     + "WHERE id=?";
 
             conectar(sql);
             comando.setBoolean(1, emprestimo.getEntregue());
-            comando.setInt(1, emprestimo.getId());
+            comando.setInt(3, emprestimo.getId());
+            LocalDate dataHoje = LocalDate.now();            
+            long diasDiferenca = dataHoje.until(emprestimo.getDataEntrega(), ChronoUnit.DAYS);
+            emprestimo.setDiasAtraso(diasDiferenca);
+            comando.setLong(2, diasDiferenca);
+            
             comando.executeUpdate();
 
         } catch (SQLException ex) {

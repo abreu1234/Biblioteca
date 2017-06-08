@@ -154,7 +154,8 @@ public class LivroUI {
         int id = Console.scanInt("ID do emprestimo: ");
         Emprestimo emprestimo = emprestimoDaoDb.procurarPorId(id);
         if( emprestimo != null ) {
-            emprestimo.entregar();
+            emprestimo.setEntregue(true);
+            emprestimoDaoDb.devolver(emprestimo);
             System.out.println("Livros entregues com sucesso. Dias de atraso: "+emprestimo.getDiasAtraso());
         }else{
             System.out.println("Cliente não possui empréstimos pendentes.");
