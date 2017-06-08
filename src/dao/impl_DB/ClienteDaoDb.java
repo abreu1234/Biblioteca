@@ -193,7 +193,7 @@ public class ClienteDaoDb implements ClienteDao {
     }
         
     public Cliente procurarPorMatricula(String matricula) {
-        String sql = "SELECT *, count(*) qtdRetirados FROM cliente c" +
+        String sql = "SELECT *, count(*) qtdRetirados, IFNULL(matricula, '0') resultado FROM cliente c" +
                 " INNER JOIN emprestimo e ON (e.cliente_id = c.id)" +
                 " INNER JOIN emprestimo_livro el ON (el.emprestimo_id = e.id)" +
                 " WHERE e.entregue = false AND c.matricula = ?";
@@ -203,27 +203,32 @@ public class ClienteDaoDb implements ClienteDao {
             comando.setString(1, matricula);
 
             ResultSet resultado = comando.executeQuery();
-
+            
             if (resultado.next()) {
-                int id = resultado.getInt("id");
-                String nome = resultado.getString("nome");
-                String telefone = resultado.getString("telefone");
+                String resultado_banco = resultado.getString("resultado");
+                if(!resultado_banco.equals("0")) {
+                     int id = resultado.getInt("id");
+                    String nome = resultado.getString("nome");
+                    String telefone = resultado.getString("telefone");
 
-                Cliente cliente = new Cliente(id, matricula, nome, telefone);
-                
-                int livrosRetirados = resultado.getInt("qtdRetirados");
-                int totalLivrosRetirados = resultado.getInt("totalLivrosRetirados");
-                long diasAtraso = resultado.getInt("diasAtraso");
-                cliente.setLivrosRetirados(livrosRetirados);
-                cliente.setTotalLivrosRetirados(totalLivrosRetirados);
-                cliente.setDiasAtraso(diasAtraso);
-                
-                return cliente;
+                    Cliente cliente = new Cliente(id, matricula, nome, telefone);
 
+                    int livrosRetirados = resultado.getInt("qtdRetirados");
+                    int totalLivrosRetirados = resultado.getInt("totalLivrosRetirados");
+                    long diasAtraso = resultado.getInt("diasAtraso");
+                    cliente.setLivrosRetirados(livrosRetirados);
+                    cliente.setTotalLivrosRetirados(totalLivrosRetirados);
+                    cliente.setDiasAtraso(diasAtraso);
+
+                    return cliente;
+                }
             }
 
         } catch (SQLException ex) {
-            System.err.println("Erro de Sistema - Problema ao buscar o cliente pelo id do Banco de Dados!");
+            System.err.println("Erro de Sistema - Problema ao buscar o cliente pela matrícula do Banco de Dados!");
+            throw new BDException(ex);
+        } catch (Exception ex) {
+            System.err.println("Erro de Sistema - Ocorreu um erro");
             throw new BDException(ex);
         } finally {
             fecharConexao();
